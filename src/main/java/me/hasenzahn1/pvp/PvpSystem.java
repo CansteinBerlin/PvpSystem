@@ -41,6 +41,11 @@ public final class PvpSystem extends JavaPlugin {
 
     private double damageThreshold;
 
+    private String peacefulModeActivePlaceholderText = "";
+    private String peacefulModeInactivePlaceholderText = "";
+
+    private boolean maceEnabledIfPeaceful;
+
     private BukkitTask countdownFinishedRunnable;
     private BukkitTask raycastModeRunnable;
 
@@ -56,6 +61,11 @@ public final class PvpSystem extends JavaPlugin {
 
         PREFIX = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix"));
         damageThreshold = PvpSystem.getInstance().getConfig().getDouble("damageThreshold", 6);
+
+        peacefulModeActivePlaceholderText = PvpSystem.getInstance().getConfig().getString("peacefulModeActivePlaceholderText", "");
+        peacefulModeInactivePlaceholderText = PvpSystem.getInstance().getConfig().getString("peacefulModeInactivePlaceholderText", "");
+
+        maceEnabledIfPeaceful = PvpSystem.getInstance().getConfig().getBoolean("maceEnabledIfPeaceful", true);
 
         parseMenuButton();
 
@@ -88,8 +98,11 @@ public final class PvpSystem extends JavaPlugin {
             new PvpPlaceholderExtension().register();
         }
 
-        countdownFinishedRunnable = new CountdownFinishedRunnable().runTaskTimer(this, 0, 20);
-        raycastModeRunnable = new RaycastModeRunnable().runTaskTimer(this, 0, 10);
+        if(PvpSystem.getInstance().getConfig().getBoolean("cooldownFinishedMessage", false))
+            countdownFinishedRunnable = new CountdownFinishedRunnable().runTaskTimer(this, 0, 20);
+
+        if(PvpSystem.getInstance().getConfig().getBoolean("raycastModeEnabled", false))
+            raycastModeRunnable = new RaycastModeRunnable().runTaskTimer(this, 0, 10);
     }
 
     public void parseMenuButton() {
@@ -125,8 +138,8 @@ public final class PvpSystem extends JavaPlugin {
     public void onDisable() {
         databaseManager.disconnect();
 
-        countdownFinishedRunnable.cancel();
-        raycastModeRunnable.cancel();
+        if(countdownFinishedRunnable != null) countdownFinishedRunnable.cancel();
+        if(raycastModeRunnable != null) raycastModeRunnable.cancel();
     }
 
     public DatabaseManager getDatabase() {
@@ -171,5 +184,17 @@ public final class PvpSystem extends JavaPlugin {
 
     public double getDamageThreshold(){
         return damageThreshold;
+    }
+
+    public String getPeacefulModeActivePlaceholderText() {
+        return peacefulModeActivePlaceholderText;
+    }
+
+    public String getPeacefulModeInactivePlaceholderText() {
+        return peacefulModeInactivePlaceholderText;
+    }
+
+    public boolean isMaceEnabledIfPeaceful() {
+        return maceEnabledIfPeaceful;
     }
 }

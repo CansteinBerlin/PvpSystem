@@ -7,7 +7,14 @@ damageThreshold: 6
 damageBelowThreshold: 1
 lastDamageDuration: 2000
 
+cooldownFinishedMessage: true
 peacefulCommandCooldownAfterPvp: 600000
+
+raycastModeEnabled: true
+peacefulModeActivePlaceholderText: "§9🎙"
+peacefulModeInActivePlaceholderText: "🎙"
+
+maceEnabledIfPeaceful: false
 
 damageEntryButtons:
   replay:

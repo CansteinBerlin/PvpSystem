@@ -40,6 +40,11 @@ public class PvpPlaceholderExtension extends PlaceholderExpansion {
             if(entry != null && entry.forcePeaceful) return "true";
             return "false";
         }
+        if(params.equalsIgnoreCase("peacefulMode")) {
+            PlayerStateEntry entry = PvpSystem.getInstance().getDatabase().getPlayerStates().get(player.getUniqueId());
+            if(entry != null && entry.state) return PvpSystem.getInstance().getPeacefulModeActivePlaceholderText();
+            return PvpSystem.getInstance().getPeacefulModeInactivePlaceholderText();
+        }
         return null;
     }
 }
